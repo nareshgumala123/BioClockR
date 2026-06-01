@@ -1,0 +1,11 @@
+# Raw data - never push to GitHub
+data-raw/nhanes_raw/
+
+# R artifacts
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# Reports output
+reports/*.pdf
