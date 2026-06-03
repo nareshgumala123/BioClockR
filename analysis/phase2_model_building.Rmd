@@ -1,0 +1,91 @@
+---
+title: "BioClockR Phase 2 - Model Building Report"
+author: "Naresh Gumala"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(dplyr)
+library(ggplot2)
+nhanes_model <- readRDS("C:/Users/Naresh Gumala/Documents/GitHub/BioClockR/data-raw/model_output/nhanes_model.rds")
+```
+
+## 1. Biomarker Distributions
+
+```{r biomarker_dist, echo=FALSE, fig.width=10, fig.height=8}
+library(tidyr)
+nhanes_model %>%
+  select(albumin, creatinine, glucose, crp, lymphocyte, mcv, rdw, alkphos, wbc) %>%
+  pivot_longer(everything(), names_to = "biomarker", values_to = "value") %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 40, fill = "steelblue", color = "white", alpha = 0.8) +
+  facet_wrap(~ biomarker, scales = "free") +
+  labs(title = "Distribution of 9 PhenoAge Biomarkers",
+       x = "Value", y = "Count") +
+  theme_minimal()
+```
+
+## 2. Biomarker Correlation with Age
+
+```{r biomarker_age_corr, echo=FALSE, fig.width=10, fig.height=8}
+nhanes_model %>%
+  select(age, albumin, creatinine, glucose, crp, lymphocyte, mcv, rdw, alkphos, wbc) %>%
+  pivot_longer(-age, names_to = "biomarker", values_to = "value") %>%
+  ggplot(aes(x = age, y = value)) +
+  geom_point(alpha = 0.1, color = "steelblue") +
+  geom_smooth(method = "loess", color = "red", se = FALSE) +
+  facet_wrap(~ biomarker, scales = "free_y") +
+  labs(title = "Biomarker Values vs Chronological Age",
+       x = "Age (years)", y = "Value") +
+  theme_minimal()
+```
+
+## 3. Age Acceleration by BMI Group
+
+```{r accel_bmi, echo=FALSE}
+# Use glucose as a proxy for metabolic health groups
+nhanes_model %>%
+  mutate(glucose_group = case_when(
+    glucose < 5.6  ~ "Normal",
+    glucose < 7.0  ~ "Pre-diabetic",
+    glucose >= 7.0 ~ "Diabetic"
+  )) %>%
+  ggplot(aes(x = glucose_group, y = age_accel, fill = glucose_group)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Biological Age Acceleration by Glucose Status",
+       subtitle = "Higher glucose associated with faster biological aging",
+       x = "Glucose Group", y = "Age Acceleration (years)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+## 4. Biological Age vs Chronological Age by Sex
+
+```{r bio_age_sex, echo=FALSE}
+ggplot(nhanes_model, aes(x = age, y = bio_age, color = sex)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  labs(title = "Biological Age vs Chronological Age by Sex",
+       subtitle = "Dashed line = perfect match",
+       x = "Chronological Age (years)",
+       y = "Biological Age (years)") +
+  theme_minimal()
+```
+
+## 5. Model Summary Statistics
+
+```{r model_summary, echo=FALSE}
+nhanes_model %>%
+  group_by(sex) %>%
+  summarise(
+    n = n(),
+    mean_bio_age   = round(mean(bio_age), 1),
+    mean_chron_age = round(mean(age), 1),
+    mean_accel     = round(mean(age_accel), 1),
+    sd_accel       = round(sd(age_accel), 1),
+    pct_older      = round(mean(age_accel > 0) * 100, 1)
+  )
+```
