@@ -1,4 +1,3 @@
-# bioclock_model.R
 library(dplyr)
 
 nhanes_clean <- readRDS("data-raw/nhanes_clean/nhanes_clean.rds")
@@ -6,23 +5,27 @@ nhanes_clean <- readRDS("data-raw/nhanes_clean/nhanes_clean.rds")
 compute_phenoage <- function(df) {
   glucose_mgdl    <- df$glucose    * 18.018
   creatinine_mgdl <- df$creatinine / 88.42
+  albumin_gdl     <- df$albumin    / 10
   xb <- -19.9067 +
-    (-0.0336 * df$albumin)      +
-    (0.0095  * creatinine_mgdl) +
-    (0.0954  * glucose_mgdl)    +
-    (0.0120  * df$crp_log)      +
-    (0.0120  * df$lymphocyte)   +
-    (0.0268  * df$mcv)          +
-    (0.3306  * df$rdw)          +
-    (0.00188 * df$alkphos)      +
+    (-0.0336 * albumin_gdl)      +
+    (0.0095  * creatinine_mgdl)  +
+    (0.0954  * glucose_mgdl)     +
+    (0.0120  * df$crp_log)       +
+    (-0.0120 * df$lymphocyte)    +
+    (0.0268  * df$mcv)           +
+    (0.3306  * df$rdw)           +
+    (0.00188 * df$alkphos)       +
     (0.0554  * df$wbc)
   pheno_age <- 141.50 +
-    (log(0.00553 * log(1 - exp(xb) / (1 - exp(exp(xb))))) / 0.090165)
+    (log(-0.00553 * log(1 - exp(xb))) / 0.090165)
   return(pheno_age)
 }
 
 nhanes_model <- nhanes_clean %>%
-  mutate(bio_age = compute_phenoage(.), age_accel = bio_age - age) %>%
+  mutate(
+    bio_age   = compute_phenoage(.),
+    age_accel = bio_age - age
+  ) %>%
   filter(!is.na(bio_age))
 
 cat("Chronological age - Mean:", round(mean(nhanes_model$age), 1), "
