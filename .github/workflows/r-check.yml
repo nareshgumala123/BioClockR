@@ -1,0 +1,31 @@
+name: R Package Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.3"
+
+      - name: Install dependencies
+        run: |
+          Rscript -e "install.packages(c('dplyr', 'ggplot2', 'survival', 'survminer', 'shiny', 'tidyr', 'rmarkdown'))"
+
+      - name: Check package structure
+        run: |
+          Rscript -e "stopifnot(file.exists('DESCRIPTION'))"
+          Rscript -e "stopifnot(file.exists('R/nhanes_cleaning.R'))"
+          Rscript -e "stopifnot(file.exists('R/bioclock_model.R'))"
+          Rscript -e "stopifnot(file.exists('R/survival_validation.R'))"
+          Rscript -e "stopifnot(file.exists('shiny/app.R'))"
+          Rscript -e "message('✅ All package files present')"
