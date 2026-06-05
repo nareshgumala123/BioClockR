@@ -1,0 +1,10 @@
+name: shiny
+title:
+username: nareshgumala
+account: nareshgumala
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17469665
+bundleId:
+url: https://nareshgumala.shinyapps.io/shiny/
+version: 1

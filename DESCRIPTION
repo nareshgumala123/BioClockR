@@ -1,0 +1,49 @@
+Package: BioClockR
+Title: Biological Age Estimation from Routine Clinical Biomarkers
+Version: 1.0.0
+Authors@R: 
+    person("Naresh", "Gumala",
+           email = "naresh.gumala@n2cloudtech.com",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0000-0000-0000"))
+Description: Implements the PhenoAge biological age algorithm (Levine et al., 2018)
+    using nine routine clinical blood biomarkers from NHANES 2015-2020.
+    Provides functions to compute biological age, age acceleration, survival
+    validation using the NHANES public-use linked mortality file, and
+    cross-validation against GEO gene expression aging signatures.
+    Includes a Shiny web application for interactive biological age estimation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Depends:
+    R (>= 4.1.0)
+Imports:
+    nhanesA (>= 0.7.1),
+    survey (>= 4.1.1),
+    tidyverse (>= 2.0.0),
+    dplyr (>= 1.1.0),
+    tidyr (>= 1.3.0),
+    ggplot2 (>= 3.4.0),
+    survival (>= 3.5.0),
+    survminer (>= 0.4.9),
+    broom (>= 1.0.0),
+    GEOquery (>= 2.66.0),
+    limma (>= 3.54.0),
+    fgsea (>= 1.24.0),
+    shiny (>= 1.7.4),
+    shinydashboard (>= 0.7.2),
+    plotly (>= 4.10.0),
+    DT (>= 0.28),
+    httr (>= 1.4.6),
+    readr (>= 2.1.4),
+    purrr (>= 1.0.1)
+Suggests:
+    testthat (>= 3.1.0),
+    knitr (>= 1.42),
+    rmarkdown (>= 2.21),
+    pROC (>= 1.18.0),
+    corrplot (>= 0.92)
+VignetteBuilder: knitr
+URL: https://github.com/nareshgumala/BioClockR
+BugReports: https://github.com/nareshgumala/BioClockR/issues

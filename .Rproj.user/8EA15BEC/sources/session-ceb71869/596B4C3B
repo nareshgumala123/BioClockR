@@ -1,0 +1,26 @@
+{
+    "id": "596B4C3B",
+    "path": "C:/Users/Naresh Gumala/Downloads/Naresh/BioClockR/data-raw/01_download_nhanes.R",
+    "project_path": "data-raw/01_download_nhanes.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": true,
+    "created": 1780296883070.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "55,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1780296976,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1780297283770,
+    "read_only": false,
+    "read_only_alternatives": []
+}
