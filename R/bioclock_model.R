@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # =============================================================================
 # FILE:    R/bioclock_model.R
 # PROJECT: BioClockR — Biological Age Estimation
@@ -221,3 +222,45 @@ validate_phenoage_distribution <- function(nhanes_with_phenoage) {
   return(computed)
 }
 
+=======
+library(dplyr)
+
+nhanes_clean <- readRDS("data-raw/nhanes_clean/nhanes_clean.rds")
+
+compute_phenoage <- function(df) {
+  glucose_mgdl    <- df$glucose    * 18.018
+  creatinine_mgdl <- df$creatinine / 88.42
+  albumin_gdl     <- df$albumin    / 10
+  xb <- -19.9067 +
+    (-0.0336 * albumin_gdl)      +
+    (0.0095  * creatinine_mgdl)  +
+    (0.0954  * glucose_mgdl)     +
+    (0.0120  * df$crp_log)       +
+    (-0.0120 * df$lymphocyte)    +
+    (0.0268  * df$mcv)           +
+    (0.3306  * df$rdw)           +
+    (0.00188 * df$alkphos)       +
+    (0.0554  * df$wbc)
+  pheno_age <- 141.50 +
+    (log(-0.00553 * log(1 - exp(xb))) / 0.090165)
+  return(pheno_age)
+}
+
+nhanes_model <- nhanes_clean %>%
+  mutate(
+    bio_age   = compute_phenoage(.),
+    age_accel = bio_age - age
+  ) %>%
+  filter(!is.na(bio_age))
+
+cat("Chronological age - Mean:", round(mean(nhanes_model$age), 1), "
+")
+cat("Biological age    - Mean:", round(mean(nhanes_model$bio_age), 1), "
+")
+cat("Age acceleration  - Mean:", round(mean(nhanes_model$age_accel), 1), "
+")
+
+dir.create("data-raw/model_output", showWarnings = FALSE)
+saveRDS(nhanes_model, "data-raw/model_output/nhanes_model.rds")
+message("✅ PhenoAge computation complete. Rows: ", nrow(nhanes_model))
+>>>>>>> c54d41e11034a866cc14adae5142cccda7fa1603

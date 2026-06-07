@@ -1,4 +1,5 @@
 Package: BioClockR
+<<<<<<< HEAD
 Title: Biological Age Estimation from Routine Clinical Biomarkers
 Version: 1.0.0
 Authors@R: 
@@ -47,3 +48,30 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://github.com/nareshgumala/BioClockR
 BugReports: https://github.com/nareshgumala/BioClockR/issues
+=======
+Title: Clinical Biological Age Estimator Using NHANES Public Data
+Version: 0.1.0
+Authors@R: person("Naresh", "Gumala", email = "nareshgumala123@github.com", role = c("aut", "cre"))
+Description: Estimates biological age from routine clinical biomarkers using the
+    PhenoAge formula (Levine et al. 2018). Validated against NHANES 2015-2020
+    public data and NCHS linked mortality files. Includes a Shiny app for
+    interactive biological age estimation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports:
+    dplyr,
+    ggplot2,
+    survival,
+    survminer,
+    shiny,
+    tidyr
+Suggests:
+    nhanesA,
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
+URL: https://github.com/nareshgumala123/BioClockR
+BugReports: https://github.com/nareshgumala123/BioClockR/issues
+>>>>>>> c54d41e11034a866cc14adae5142cccda7fa1603

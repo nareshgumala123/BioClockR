@@ -1,0 +1,74 @@
+---
+title: "BioClockR Phase 1 EDA"
+author: "Naresh Gumala"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(dplyr)
+library(ggplot2)
+setwd("C:/Users/Naresh Gumala/Documents/GitHub/BioClockR")
+nhanes_model <- readRDS("data-raw/model_output/nhanes_model.rds")
+```
+
+## 1. Biological Age vs Chronological Age
+
+```{r age_scatter}
+ggplot(nhanes_model, aes(x = age, y = bio_age)) +
+  geom_point(alpha = 0.2, color = "steelblue") +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Biological Age vs Chronological Age",
+       x = "Chronological Age (years)", y = "Biological Age (years)") +
+  theme_minimal()
+```
+
+## 2. Age Acceleration by Sex
+
+```{r accel_sex}
+ggplot(nhanes_model, aes(x = sex, y = age_accel, fill = sex)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Biological Age Acceleration by Sex",
+       x = "Sex", y = "Age Acceleration (years)") +
+  theme_minimal() + theme(legend.position = "none")
+```
+
+## 3. Age Acceleration by Race
+
+```{r accel_race}
+nhanes_model %>%
+  mutate(race = as.character(race)) %>%
+  ggplot(aes(x = reorder(race, age_accel, median), y = age_accel, fill = race)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  coord_flip() +
+  labs(title = "Biological Age Acceleration by Race/Ethnicity",
+       x = "Race/Ethnicity", y = "Age Acceleration (years)") +
+  theme_minimal() + theme(legend.position = "none")
+```
+
+## 4. Distribution of Age Acceleration
+
+```{r accel_dist}
+ggplot(nhanes_model, aes(x = age_accel)) +
+  geom_histogram(bins = 50, fill = "steelblue", color = "white", alpha = 0.8) +
+  geom_vline(xintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Distribution of Biological Age Acceleration",
+       x = "Age Acceleration (years)", y = "Count") +
+  theme_minimal()
+```
+
+## 5. Summary Statistics
+
+```{r summary_table}
+nhanes_model %>%
+  group_by(sex) %>%
+  summarise(
+    n = n(),
+    mean_chron_age = round(mean(age), 1),
+    mean_bio_age   = round(mean(bio_age), 1),
+    mean_accel     = round(mean(age_accel), 1),
+    sd_accel       = round(sd(age_accel), 1)
+  )
+```
