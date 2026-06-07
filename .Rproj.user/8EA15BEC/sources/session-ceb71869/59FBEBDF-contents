@@ -1,5 +1,0 @@
-packageVersion("nhanesA")
-nhanesOptions(use.db = FALSE)
-nhanesA::nhanesSearchVarName("SEQN")
-demo_15 <- nhanes("DEMO_I")
-head(demo_15)
